@@ -12,9 +12,9 @@
     <h2>URLS</h2>
 
 <ul>
-    <% urls.forEach(function(urls) { %>
-        <li><%= urls %></li>
-    <% }); %>
+    <% for ( var entry in urls) {%>
+        <li><%= entry %>: <%= urls[entry] %></li>
+    <% }; %>
 </ul>
 </body>
 </html>
