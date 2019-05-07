@@ -9,8 +9,17 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+let urlOutput =
+  ["b2xVn2: http://www.lighthouselabs.ca",
+  "9sm5xK: http://www.google.com"]
+
 app.get("/", (req, res) => {
   res.send("Help Me");
+});
+
+app.get("/urls", (req, res) =>{
+  let templateVariables = { urls: urlOutput };
+  res.render("urls_index", templateVariables);
 });
 
 app.get("/urls.json", (req, res) => {
