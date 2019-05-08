@@ -1,3 +1,25 @@
 <!-- views/partials/header.ejs -->
+<ul style="background-color: #dddddd;">
+  <li style="display: inline; padding: 8px;"><a href="/urls">Home</a></li>
+  <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
+</ul>
+
+<div style="display: inline;">
+<% if(!username){ %>
+   <form name="username" method="POST"  action="/login">
+      <div style="background-color:50%;">
+        <input class="form-control" type="text" name="username" placeholder="Input Username" style="width: 300px; margin: 1em">
+        <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+ <% } else{ %>
+   <h2>User: <%= username %>
+   <form method="POST" action="/logout">
+        <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
+<% } %></div>
+
+<hr>
 
 <h1>tinyApp</h1>
+
+

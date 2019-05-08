@@ -2,9 +2,12 @@ const express = require("express");
 const app = express();
 const port = 8080;
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 app.set("view engine", "ejs");
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -16,18 +19,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVariables = { urls: urlDatabase };
+  let templateVariables = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVariables);
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let templateVariables = {username: req.cookies["username"]};
+  res.render("urls_new", templateVariables);
 });
 
 app.post("/urls", (req, res) => {
   let shortenedURL = generateRandomString()
   urlDatabase[shortenedURL] = "http://" + req.body.longURL;
-  let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL };
+  let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL, username: req.cookies["username"] };
   res.render("urls_show", templateVars);
 });
 
@@ -37,7 +41,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"] };
   res.render("urls_show", templateVars);
 });
 
@@ -46,7 +50,16 @@ app.post("/urls/:shortURL", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/login", (req,res) => {
+  res.cookie("username", req.body.username);
+  // userCookie.username = req.cookies["username"];
+  res.redirect("/urls");
+});
 
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/urls");
+});
 
 app.get("/u/:shortURL", (req, res) => {
   let outboundURL = urlDatabase[req.params.shortURL];
