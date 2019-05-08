@@ -1,25 +1,21 @@
 <!-- views/partials/header.ejs -->
+
+<h1>tinyApp</h1>
 <ul style="background-color: #dddddd;">
   <li style="display: inline; padding: 8px;"><a href="/urls">Home</a></li>
   <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
+  <li style="display: inline; padding: 8px;"><a href="/login">Login</a></li>
+  <li style="display: inline; padding: 8px;"><a href="/register">Register</a></li>
 </ul>
 
 <div style="display: inline;">
-<% if(!username){ %>
-   <form name="username" method="POST"  action="/login">
-      <div style="background-color:50%;">
-        <input class="form-control" type="text" name="username" placeholder="Input Username" style="width: 300px; margin: 1em">
-        <button type="submit" class="btn btn-primary">Submit</button>
-</form>
- <% } else{ %>
-   <h2>User: <%= username %>
+<% if(userlist[user_Id] === undefined){ } else {%>
+   <h2>User: <%= userlist[user_Id].email %>
    <form method="POST" action="/logout">
         <button type="submit" class="btn btn-primary">Logout</button>
         </form>
-<% } %></div>
+<% }%></div>
 
-<hr>
 
-<h1>tinyApp</h1>
 
 
