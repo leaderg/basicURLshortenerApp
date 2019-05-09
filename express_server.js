@@ -9,28 +9,17 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 
 
+const bcrypt = require('bcrypt');
+function hashedPassword(password) {
+  return bcrypt.hashSync(password, 10)
+};
+
 const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "None" },
   i3BoGr: { longURL: "https://www.google.ca", userID: "None" }
 };
 
-const users = {
-  "None": {
-    id: "None",
-    email: "admin",
-    password: ""
-  },
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
-};
+const users = {};
 
 
 //app.route() create chainable route handlers for a route path GET POST etc.
@@ -51,7 +40,7 @@ app.post("/register", (req, res) => {
     users[newId] = {
       id: newId,
       email: req.body.email,
-      password: req.body.pass
+      password: hashedPassword(req.body.pass)
     };
     res.cookie("user_id", newId);
     console.log(users);
@@ -67,7 +56,7 @@ app.post("/login", (req,res) => {
   let tempID = emailToId(req.body.email);
   if (tempID === false) {
     res.send(`User not found </br><a href="/login">Go Back</a>`)
-  } else if (req.body.pass === users[tempID].password) {
+  } else if (bcrypt.compareSync(req.body.pass, users[tempID].password)) {
       res.cookie("user_id", tempID);
   } else {
     res.send(`Password incorrect.</br><a href="/login">Go Back</a>`)
