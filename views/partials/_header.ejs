@@ -4,8 +4,9 @@
 <ul style="background-color: #dddddd;">
   <li style="display: inline; padding: 8px;"><a href="/urls">Home</a></li>
   <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
+  <% if(userlist[user_Id] !== undefined){ } else {%>
   <li style="display: inline; padding: 8px;"><a href="/login">Login</a></li>
-  <li style="display: inline; padding: 8px;"><a href="/register">Register</a></li>
+  <li style="display: inline; padding: 8px;"><a href="/register">Register</a></li><% }; %>
   <% if(userlist[user_Id] === undefined){ } else {%>
   <li class="text-right" style="display: inline; padding: 8px;"><%= userlist[user_Id].email %></li>
   <li class="text-right" style="width: 20px; display: inline; padding: 8px;"><form style="display: in-line; height: 100%; width: 20px;" method="POST" action="/logout">

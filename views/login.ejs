@@ -13,13 +13,14 @@
   <body style="font-size:20px; padding:50px;">
 
     <% include partials/_header %>
-
-    <h3>Register User</h3></br>
+<% if(userlist[user_Id] !== undefined){ } else {%>
+    <h3>User Login</h3></br>
     <form action="/login" method="POST">
         <label for="login">Enter Credentials</label></br>
         <input type="text" name="email" placeholder="email" style="width: 300px; margin: 1em"></br>
         <input type="text" name="pass" placeholder="Password" style="width: 300px; margin: 1em"></br>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <% }; %>
   </body>
 </html>
