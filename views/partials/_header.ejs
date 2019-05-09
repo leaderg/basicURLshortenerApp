@@ -6,15 +6,16 @@
   <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
   <li style="display: inline; padding: 8px;"><a href="/login">Login</a></li>
   <li style="display: inline; padding: 8px;"><a href="/register">Register</a></li>
+  <% if(userlist[user_Id] === undefined){ } else {%>
+  <li class="text-right" style="display: inline; padding: 8px;"><%= userlist[user_Id].email %></li>
+  <li class="text-right" style="width: 20px; display: inline; padding: 8px;"><form style="display: in-line; height: 100%; width: 20px;" method="POST" action="/logout">
+    <button type="submit" style="background: none;
+  border: none; color: blue; text-decoration: underline;
+  cursor: pointer; font-size: 1em; font-family: serif;
+">Logout</button></form></li>
+  <% }%>
 </ul>
 
-<div style="display: inline;">
-<% if(userlist[user_Id] === undefined){ } else {%>
-   <h2>User: <%= userlist[user_Id].email %>
-   <form method="POST" action="/logout">
-        <button type="submit" class="btn btn-primary">Logout</button>
-        </form>
-<% }%></div>
 
 
 

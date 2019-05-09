@@ -10,17 +10,22 @@
 </head>
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/_header %>
-    <h2>URLS</h2>
 
-<ul>
-    <% for (var entry in urls) {%>
-        <li><%= entry %>: <%= urls[entry] %></li>
-        <a href="urls/<%- entry %>">Edit</a>
-        <form method="POST" action="/urls/<%= entry %>/delete">
-        <button type="submit" class="btn btn-primary">DELETE</button>
-        </form>
-        </br>
-    <% }; %>
-</ul>
+<div style="display: inline;">
+<% if(userlist[user_Id] === undefined){ } else {%>
+  <h2>tinyApp URLS for <%= userlist[user_Id].email %>:
+  <ul>
+  <% for (var entry in urls) {%>
+    <li><%= entry %>: <%= urls[entry] %></li>
+    <a href="urls/<%- entry %>">Edit</a>
+    <form method="POST" action="/urls/<%= entry %>/delete">
+      <button type="submit" class="btn btn-primary">DELETE</button>
+    </form>
+    </br>
+  <% }; %>
+  </ul>
+<% }%>
+</div>
+
 </body>
 </html>
