@@ -12,7 +12,7 @@
   <% include ./partials/_header %>
     <h2>URLS</h2>
 
-<%= shortURL %>: <a href="<%- longURL %>"><%= longURL %></a></li>
+<%= shortURL %>: <a href="<%= fullURL %>"><%= fullURL %></a></li>
 <form class="form-inline" name="newURL" method="POST"  action="/urls/<%= shortURL %>">
       <div class="form-group mb-2">
         <label for="newURL">Update URL:</label>

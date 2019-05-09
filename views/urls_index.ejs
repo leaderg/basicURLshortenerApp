@@ -15,14 +15,14 @@
 <% if(userlist[user_Id] === undefined){ } else {%>
   <h2>tinyApp URLS for <%= userlist[user_Id].email %>:
   <ul>
-  <% for (var entry in urls) {%>
-    <li><%= entry %>: <%= urls[entry] %></li>
+  <% for (var entry in urls) { if (urls[entry].userID === user_Id) {%>
+    <li><%= entry %>: <%= urls[entry].longURL %></li>
     <a href="urls/<%- entry %>">Edit</a>
     <form method="POST" action="/urls/<%= entry %>/delete">
       <button type="submit" class="btn btn-primary">DELETE</button>
     </form>
     </br>
-  <% }; %>
+  <%}; }; %>
   </ul>
 <% }%>
 </div>

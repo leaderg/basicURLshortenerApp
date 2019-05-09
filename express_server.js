@@ -10,14 +10,14 @@ app.set("view engine", "ejs");
 
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "None" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "None" }
 };
 
 const users = {
   "None": {
     id: "None",
-    email: "no@email.com",
+    email: "admin",
     password: ""
   },
   "userRandomID": {
@@ -58,47 +58,9 @@ app.post("/register", (req, res) => {
     res.redirect("/urls");
   }});
 
-app.get("/urls", (req, res) => {
-  let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.cookies["user_id"] };
-  res.render("urls_index", templateVariables);
-});
-
 app.get("/login", (req, res) => {
   let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.cookies["user_id"] };
   res.render("login", templateVariables);
-});
-
-
-app.get("/urls/new", (req, res) => {
-  if (!req.cookies["user_id"]) {
-    res.redirect("/urls");
-  }
-  console.log(req.cookies["user_id"]);
-  let templateVariables = { userlist: users, user_Id: req.cookies["user_id"]};
-  res.render("urls_new", templateVariables);
-});
-
-app.post("/urls", (req, res) => {
-  let shortenedURL = generateRandomString()
-  urlDatabase[shortenedURL] = "http://" + req.body.longURL;
-  let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL, userlist: users, user_Id: req.cookies["user_id"] };
-  // res.render("urls_show", templateVars);
-  res.redirect("/urls");
-});
-
-app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
-});
-
-app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], userlist: users, user_Id: req.cookies["user_id"] };
-  res.render("urls_show", templateVars);
-});
-
-app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.newURL;
-  res.redirect("/urls");
 });
 
 app.post("/login", (req,res) => {
@@ -118,9 +80,53 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
+app.get("/urls", (req, res) => {
+  let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.cookies["user_id"] };
+  res.render("urls_index", templateVariables);
+});
+
+app.get("/urls/new", (req, res) => {
+  if (!req.cookies["user_id"]) {
+    res.redirect("/urls");
+  }
+  console.log(req.cookies["user_id"]);
+  let templateVariables = { userlist: users, user_Id: req.cookies["user_id"]};
+  res.render("urls_new", templateVariables);
+});
+
+app.post("/urls", (req, res) => {
+  let shortenedURL = generateRandomString()
+  urlDatabase[shortenedURL] = {
+    longURL: "http://" + req.body.longURL,
+    userID: req.cookies["user_id"]};
+  let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL, userlist: users, user_Id: req.cookies["user_id"] };
+  // res.render("urls_show", templateVars);
+  res.redirect("/urls");
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect("/urls");
+});
+
+app.get("/urls/:shortURL", (req, res) => {
+  let templateVars = { shortURL: req.params.shortURL, fullURL: urlDatabase[req.params.shortURL].longURL, userlist: users, user_Id: req.cookies["user_id"] };
+  res.render("urls_show", templateVars);
+});
+
+app.post("/urls/:shortURL", (req, res) => {
+  if (shortURLExists(req.params.shortURL)) {
+    urlDatabase[req.params.shortURL].longURL = req.body.newURL;
+  };
+  res.redirect("/urls");
+});
+
 app.get("/u/:shortURL", (req, res) => {
-  let outboundURL = urlDatabase[req.params.shortURL];
-  res.redirect(outboundURL);
+  if (shortURLExists(req.params.shortURL)) {
+    let outboundURL = urlDatabase[req.params.shortURL].longURL;
+    res.redirect(outboundURL);
+  };
+  res.status(400).send('Shorted URL does not exist.</br><a href="/urls">Go Back</a>');
 });
 
 app.get("/urls.json", (req, res) => {
@@ -168,3 +174,9 @@ function emailToId(input) {
   };
   return false;
 };
+
+function shortURLExists(shorturl) {
+  if (urlDatabase[shorturl]) return true;
+  else return false;
+}
+
