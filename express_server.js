@@ -10,10 +10,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: 'session',
   keys: ['key1'],
-
-  // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}))
+  maxAge: 24 * 60 * 60 * 1000
+}));
 
 const bcrypt = require('bcrypt');
 function hashedPassword(password) {
@@ -83,9 +81,10 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/urls");
-  }
-  let templateVariables = { userlist: users, user_Id: req.session.user_id };
-  res.render("urls_new", templateVariables);
+  } else {
+    let templateVariables = { userlist: users, user_Id: req.session.user_id };
+    res.render("urls_new", templateVariables);
+  };
 });
 
 app.post("/urls", (req, res) => {
@@ -111,8 +110,9 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   if (shortURLExists(req.params.shortURL)) {
     urlDatabase[req.params.shortURL].longURL = req.body.newURL;
+  } else {
+    res.redirect("/urls");
   };
-  res.redirect("/urls");
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -136,10 +136,10 @@ app.listen(port, () => {
 });
 
 function generateRandomString() {
-   var result           = '';
-   var characters       = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-   var charactersLength = characters.length;
-   for ( var i = 0; i < 6; i++ ) {
+   let result           = '';
+   let characters       = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+   let charactersLength = characters.length;
+   for ( let i = 0; i < 6; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
    }
    return result;

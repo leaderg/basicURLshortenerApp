@@ -3,23 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="/stylesheet.css" />
   <title>TinyApp</title>
 </head>
-<body style="font-size:20px; padding:50px;">
+<body>
   <% include ./partials/_header %>
 
 <div style="display: inline;">
-<% if(userlist[user_Id] === undefined){ } else {%>
+<% if(userlist[user_Id] === undefined){ %>
+
+<div style="padding-left: 1em; padding-right: 1em; ">
+  <h1>Welcome to tinyApp</h1>
+  <p>The pinnacle of URL shortening web applications on the web today!</p>
+
+  <p>Please log in or register to enjoy functionality!</p>
+</div>
+
+
+
+
+
+<%} else {%>
   <h2>tinyApp URLS for <%= userlist[user_Id].email %>:
   <ul>
   <% for (var entry in urls) { if (urls[entry].userID === user_Id) {%>
     <li><%= entry %>: <a href="<%= urls[entry].longURL %>"><%= urls[entry].longURL %></a></li>
     <a href="urls/<%- entry %>">Edit</a>
     <form method="POST" action="/urls/<%= entry %>/delete">
-      <button type="submit" class="btn btn-primary">DELETE</button>
+      <button type="submit">DELETE</button>
     </form>
     </br>
   <%}; }; %>

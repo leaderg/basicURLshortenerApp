@@ -3,21 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="./stylesheet.css">
   <title>TinyApp</title>
 </head>
-<body style="font-size:20px; padding:50px;">
+<body>
   <% include ./partials/_header %>
     <h2>URLS</h2>
 
 <%= shortURL %>: <a href="<%= fullURL %>"><%= fullURL %></a></li>
-<form class="form-inline" name="newURL" method="POST"  action="/urls/<%= shortURL %>">
-      <div class="form-group mb-2">
+<form name="newURL" method="POST"  action="/urls/<%= shortURL %>">
+
         <label for="newURL">Update URL:</label>
-        <input class="form-control" type="text" value="<%= fullURL %>" name="newURL" placeholder="http://" style="width: 300px; margin: 1em">
-        <button type="submit" class="btn btn-primary">Update</button>
+        <input type="text" value="<%= fullURL %>" name="newURL" placeholder="http://" style="width: 300px; margin: 1em">
+        <button type="submit" >Update</button>
 </form>
 
 </body>

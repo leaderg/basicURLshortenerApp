@@ -1,19 +1,17 @@
-<!-- views/partials/header.ejs -->
-
-<h1>tinyApp</h1>
-<ul style="background-color: #dddddd;">
+<h1 style="text-align: center">tinyApp</h1>
+<ul style="text-align: center">
   <li style="display: inline; padding: 8px;"><a href="/urls">Home</a></li>
-  <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
   <% if(userlist[user_Id] !== undefined){ } else {%>
   <li style="display: inline; padding: 8px;"><a href="/login">Login</a></li>
   <li style="display: inline; padding: 8px;"><a href="/register">Register</a></li><% }; %>
   <% if(userlist[user_Id] === undefined){ } else {%>
-  <li class="text-right" style="display: inline; padding: 8px;"><%= userlist[user_Id].email %></li>
-  <li class="text-right" style="width: 20px; display: inline; padding: 8px;"><form style="display: in-line; height: 100%; width: 20px;" method="POST" action="/logout">
-    <button type="submit" style="background: none;
-  border: none; color: blue; text-decoration: underline;
-  cursor: pointer; font-size: 1em; font-family: serif;
-">Logout</button></form></li>
+  <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
+  <li style="display: inline; padding: 8px;"><%= userlist[user_Id].email %></li>
+  <li style="display: inline; padding: 8px;">
+    <form style="display: in-line;" method="POST" action="/logout">
+      <button type="submit">Logout</button>
+    </form>
+  </li>
   <% }%>
 </ul>
 
