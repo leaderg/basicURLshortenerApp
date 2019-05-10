@@ -2,20 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="stylesheet.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
     <title>Register</title>
   </head>
 
-  <body>
+  <body style="font-size:20px; padding:0px;">
 
     <% include partials/_header %>
 
     <h3>Register User</h3></br>
     <form action="/register" method="POST">
         <label for="registration">Enter New Credentials</label></br>
-        <input type="text" name="email" placeholder="email" style="width: 300px; margin: 1em"></br>
-        <input type="text" name="pass" placeholder="Password" style="width: 300px; margin: 1em"></br>
+        <input type="text" name="email" placeholder="email"></br>
+        <input type="text" name="pass" placeholder="Password"></br>
         <button type="submit">Submit</button>
     </form>
   </body>

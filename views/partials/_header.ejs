@@ -1,21 +1,44 @@
-<h1 style="text-align: center">tinyApp</h1>
-<ul style="text-align: center">
-  <li style="display: inline; padding: 8px;"><a href="/urls">Home</a></li>
-  <% if(userlist[user_Id] !== undefined){ } else {%>
-  <li style="display: inline; padding: 8px;"><a href="/login">Login</a></li>
-  <li style="display: inline; padding: 8px;"><a href="/register">Register</a></li><% }; %>
-  <% if(userlist[user_Id] === undefined){ } else {%>
-  <li style="display: inline; padding: 8px;"><a href="/urls/new">Add</a></li>
-  <li style="display: inline; padding: 8px;"><%= userlist[user_Id].email %></li>
-  <li style="display: inline; padding: 8px;">
-    <form style="display: in-line;" method="POST" action="/logout">
-      <button type="submit">Logout</button>
+<!-- == Templates for bootstrap navbar from https://getbootstrap.com/docs/4.3/components/navbar/ -->
+
+<% if(userlist[user_Id] !== undefined){ %>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand font-weight-bold" href="/urls">TinyApp</a>
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/urls">Home <span class="sr-only"></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/urls/new">Add New URL</a>
+      </li>
+    </ul>
+    <div class="form-inline my-2 my-lg-0">
+      <div style="position: fixed; right: 100px;">
+        USER EMAIL: <%= userlist[user_Id].email %>
+      </div>
+    <form class="form-inline my-2 my-lg-0" action="/logout" method="POST">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
     </form>
-  </li>
-  <% }%>
-</ul>
+  </div>
+  </div>
+</nav>
 
 
-
-
-
+<%} else {%>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand font-weight-bold" href="/urls">TinyApp</a>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/urls">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/register">Register</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<% };%>

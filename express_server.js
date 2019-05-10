@@ -1,11 +1,15 @@
+//Dependencies and modules declared.
 const express = require("express");
+const bcrypt = require('bcrypt');
+const bodyParser = require("body-parser");
+const cookieSession = require('cookie-session');
 const app = express();
 const port = 8080;
-const bodyParser = require("body-parser");
-const cookieSession = require('cookie-session')
 
+//sets view engine to EJS
 app.set("view engine", "ejs");
 
+//Assigns module methods
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: 'session',
@@ -13,29 +17,22 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000
 }));
 
-const bcrypt = require('bcrypt');
-function hashedPassword(password) {
-  return bcrypt.hashSync(password, 10)
-};
-
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "None" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "None" }
-};
-
+//Commissioning URL and User Database.
+const urlDatabase = {};
 const users = {};
 
-
-//app.route() create chainable route handlers for a route path GET POST etc.
+//Redirect to homepage "/urls"
 app.get("/", (req, res) => {
-  res.send("Help Me");
+  res.redirect("/urls");
 });
 
+//Registration page GET
 app.get("/register", (req, res) => {
   let templateVariables = { userlist: users, user_Id: req.session.user_id };
   res.render("registration", templateVariables);
 });
 
+//Registration form POST
 app.post("/register", (req, res) => {
   if (inUsers(users, 'email', req.body.email)) {
     res.status(400).send('email in use</br><a href="/register">Go Back</a>');
@@ -49,13 +46,16 @@ app.post("/register", (req, res) => {
     req.session.user_id = newId;
     console.log(users);
     res.redirect("/urls");
-  }});
+  }
+});
 
+//Login Page GET
 app.get("/login", (req, res) => {
   let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.session.user_id };
   res.render("login", templateVariables);
 });
 
+//Login form POST
 app.post("/login", (req,res) => {
   let tempID = emailToId(req.body.email);
   if (tempID === false) {
@@ -68,16 +68,19 @@ app.post("/login", (req,res) => {
   res.redirect("/urls");
 });
 
+//Logout POST
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/urls");
 });
 
+//Homepage GET
 app.get("/urls", (req, res) => {
   let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.session.user_id };
   res.render("urls_index", templateVariables);
 });
 
+//Create a new TinyApp URL page GET
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/urls");
@@ -87,34 +90,39 @@ app.get("/urls/new", (req, res) => {
   };
 });
 
+//Create new TinyApp URL POST
 app.post("/urls", (req, res) => {
   let shortenedURL = generateRandomString()
   urlDatabase[shortenedURL] = {
-    longURL: "http://" + req.body.longURL,
+    longURL: addhttp(req.body.longURL),
     userID: req.session.user_id};
   let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL, userlist: users, user_Id: req.session.user_id };
-  // res.render("urls_show", templateVars);
   res.redirect("/urls");
 });
 
+//Delete a TinyApp URL POST
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
 
+//Page to edit TinyApp URL GET
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, fullURL: urlDatabase[req.params.shortURL].longURL, userlist: users, user_Id: req.session.user_id };
   res.render("urls_show", templateVars);
 });
 
+//Edit TinyApp URL POST
 app.post("/urls/:shortURL", (req, res) => {
   if (shortURLExists(req.params.shortURL)) {
-    urlDatabase[req.params.shortURL].longURL = req.body.newURL;
+    urlDatabase[req.params.shortURL].longURL = addhttp(req.body.newURL);
+    res.redirect("/urls");
   } else {
     res.redirect("/urls");
   };
 });
 
+//Redirect to TinyApp original URL GET
 app.get("/u/:shortURL", (req, res) => {
   if (shortURLExists(req.params.shortURL)) {
     let outboundURL = urlDatabase[req.params.shortURL].longURL;
@@ -123,28 +131,25 @@ app.get("/u/:shortURL", (req, res) => {
   res.status(400).send('Shorted URL does not exist.</br><a href="/urls">Go Back</a>');
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
+//Listening Port to commission server.
 app.listen(port, () => {
   console.log(`Basic initialation of server listing on port: ${port}.`);
 });
 
+
+//Function list
+//generates a randomized ID (Not scaleable)
 function generateRandomString() {
    let result           = '';
    let characters       = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
    let charactersLength = characters.length;
    for ( let i = 0; i < 6; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
-   }
+   };
    return result;
-}
+};
 
+//Searches User ID to see if in list.
 function inUsers(obj, key, value) {
   for (let entry in obj) {
     if (obj[entry][key] === value) {
@@ -154,12 +159,14 @@ function inUsers(obj, key, value) {
   return false;
 };
 
+//Determines user's email address from a given user ID.
 function idToEmail(user_id) {
   if (users[user_id].email !== undefined) {
     return users[user_id].email;
   } else return "None";
 };
 
+//takes an email adress and finds corrosponding user ID.
 function emailToId(input) {
   for (let id in users) {
     if (users[id].email === input) {
@@ -169,8 +176,21 @@ function emailToId(input) {
   return false;
 };
 
+//Determines if a tinyApp URL exists in the database.
 function shortURLExists(shorturl) {
   if (urlDatabase[shorturl]) return true;
   else return false;
-}
+};
 
+//Hashes a password.
+function hashedPassword(password) {
+  return bcrypt.hashSync(password, 10)
+};
+
+//Error handles http.
+function addhttp(url) {
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'http://' + url;
+  };
+  return url;
+};
