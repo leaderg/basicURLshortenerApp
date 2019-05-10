@@ -28,8 +28,12 @@ app.get("/", (req, res) => {
 
 //Registration page GET
 app.get("/register", (req, res) => {
-  let templateVariables = { userlist: users, user_Id: req.session.user_id };
-  res.render("registration", templateVariables);
+  if (req.session.user_id) {
+    res.redirect("/urls")
+  } else {
+    let templateVariables = { userlist: users, user_Id: req.session.user_id };
+    res.render("registration", templateVariables);
+  }
 });
 
 //Registration form POST
@@ -44,28 +48,31 @@ app.post("/register", (req, res) => {
       password: hashedPassword(req.body.pass)
     };
     req.session.user_id = newId;
-    console.log(users);
     res.redirect("/urls");
   }
 });
 
 //Login Page GET
 app.get("/login", (req, res) => {
-  let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.session.user_id };
-  res.render("login", templateVariables);
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    let templateVariables = { urls: urlDatabase, userlist: users, user_Id: req.session.user_id };
+    res.render("login", templateVariables);
+  }
 });
 
 //Login form POST
 app.post("/login", (req,res) => {
   let tempID = emailToId(req.body.email);
   if (tempID === false) {
-    res.send(`User not found </br><a href="/login">Go Back</a>`)
+    return res.send(`User not found </br><a href="/login">Go Back</a>`)
   } else if (bcrypt.compareSync(req.body.pass, users[tempID].password)) {
       req.session.user_id = tempID;
+      res.redirect("/urls");
   } else {
-    res.send(`Password incorrect.</br><a href="/login">Go Back</a>`)
+    return res.send(`Password incorrect.</br><a href="/login">Go Back</a>`)
   }
-  res.redirect("/urls");
 });
 
 //Logout POST
@@ -102,12 +109,18 @@ app.post("/urls", (req, res) => {
 
 //Delete a TinyApp URL POST
 app.post("/urls/:shortURL/delete", (req, res) => {
+  if (req.session.user_id !== urlDatabase[req.params.shortURL].userID) {
+    return res.redirect("/urls");
+  }
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
 
 //Page to edit TinyApp URL GET
 app.get("/urls/:shortURL", (req, res) => {
+  if (req.session.user_id !== urlDatabase[req.params.shortURL].userID) {
+    return res.redirect("/urls");
+  }
   let templateVars = { shortURL: req.params.shortURL, fullURL: urlDatabase[req.params.shortURL].longURL, userlist: users, user_Id: req.session.user_id };
   res.render("urls_show", templateVars);
 });

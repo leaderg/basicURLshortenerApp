@@ -9,15 +9,16 @@
 </head>
 <body style="font-size:20px; padding:0px;">
   <% include ./partials/_header %>
-    <h2>URLS</h2>
 
-<%= shortURL %>: <a href="<%= fullURL %>"><%= fullURL %></a></li>
+<div style="text-align: center;">
+  <h1>URL Lookup</h1>
+<h2 style="padding: 25px;"><%= shortURL %>: <a href="<%= fullURL %>"><%= fullURL %></a></h2>
+
 <form name="newURL" method="POST"  action="/urls/<%= shortURL %>">
-
-        <label for="newURL">Update URL:</label>
-        <input type="text" value="<%= fullURL %>" name="newURL" placeholder="http://">
-        <button type="submit" >Update</button>
+  <label for="newURL">Update URL:</label>
+  <input type="text" value="<%= fullURL %>" name="newURL" placeholder="http://">
+  <button type="submit" >Update</button>
 </form>
-
+</div>
 </body>
 </html>

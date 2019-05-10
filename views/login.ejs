@@ -5,19 +5,49 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-    <title>Register</title>
+    <title>Login</title>
   </head>
 
   <body style="font-size:20px; padding:0px;">
   <% include partials/_header %>
-  <% if(userlist[user_Id] !== undefined){ } else {%>
-    <h3>User Login</h3></br>
-    <form action="/login" method="POST">
-        <label for="login">Enter Credentials</label></br>
-        <input type="text" name="email" placeholder="email"></br>
-        <input type="text" name="pass" placeholder="Password"></br>
-        <button type="submit">Submit</button>
-    </form>
-    <% }; %>
+
+  <!-- FORM STYLING FROM https://bootsnipp.com/forms -->
+  <div style="width: 50%;">
+  <form style="padding-top: 1em; padding-left: 2em;" class="form-horizontal"  action="/login" method="POST">
+  <fieldset>
+
+  <!-- Form Name -->
+  <legend>Login</legend>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="textinput">Email</label>
+    <div class="col-md-4">
+    <input id="textinput" name="email" type="email" placeholder="Email Address" class="form-control input-md">
+
+    </div>
+  </div>
+
+  <!-- Password input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="passwordinput">Password</label>
+    <div class="col-md-4">
+      <input id="passwordinput" name="pass" type="password" placeholder="Password" class="form-control input-md">
+
+    </div>
+  </div>
+
+  <!-- Button -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="singlebutton"></label>
+    <div class="col-md-4">
+      <button id="singlebutton" name="singlebutton" class="btn btn-success">Submit</button>
+    </div>
+  </div>
+
+  </fieldset>
+  </form>
+</div>
+
   </body>
 </html>

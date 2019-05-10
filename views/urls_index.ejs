@@ -12,15 +12,16 @@
 <div>
 <% if(userlist[user_Id] === undefined){ %>
 
-<div>
+<div style="margin: 0 auto; width: 80%; padding: 15px; text-align: center;">
   <h1>Welcome to tinyApp</h1>
   <p>The pinnacle of URL shortening web applications on the web today!</p>
 
-  <p>Please log in or register to enjoy functionality!</p>
+  <p>Please <a href="/login">log in</a> or <a href="/register">register</a> to enjoy functionality!</p>
 </div>
 
 <%} else { %>
-  <h2>tinyApp URLS for <%= userlist[user_Id].email %>:
+
+  <h1 style="margin: 0 auto; width: 80%; padding: 15px; text-align: center;"><%= userlist[user_Id].email %> tinyApp URLS</h1>
 
   <% for (let entry in urls) { if (urls[entry].userID === user_Id) {%>
 
@@ -31,7 +32,7 @@
       <a href="urls/<%= entry %>"><%= entry %></a>
     </div>
     <div class="col-6">
-      <a style="overflow: hidden;" href="<%= urls[entry].longURL %>"><%= urls[entry].longURL %></a>
+      <a style="overflow: hidden; max-width: 50%" href="<%= urls[entry].longURL %>"><%= urls[entry].longURL %></a>
     </div>
     <div class="col-2">
       <a href="urls/<%= entry %>">Edit</a>
@@ -44,8 +45,16 @@
   </div>
 </div>
 </div>
+<% }}%>
+<div style="background-color: #ededed; width: 80%; position: center; border-radius: 8px; margin: 10px auto; ">
+<div class="container" style="text-align: center; ">
+  <div class="row" style="display : flex; flex-direction: row; align-items : center;">
+  <div class="col-10">
+      <a href="/urls/new">Add a new URL!</a>
+    </div>
+    </div></div></div>
 
-<% }}}%>
+<% }%>
 
 
 

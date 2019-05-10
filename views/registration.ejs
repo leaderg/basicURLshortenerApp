@@ -11,12 +11,42 @@
 
     <% include partials/_header %>
 
-    <h3>Register User</h3></br>
-    <form action="/register" method="POST">
-        <label for="registration">Enter New Credentials</label></br>
-        <input type="text" name="email" placeholder="email"></br>
-        <input type="text" name="pass" placeholder="Password"></br>
-        <button type="submit">Submit</button>
-    </form>
+<!-- FORM STYLING FROM https://bootsnipp.com/forms -->
+  <div style="width: 50%;">
+  <form style="padding-top: 1em; padding-left: 2em;" class="form-horizontal"  action="/register" method="POST">
+  <fieldset>
+
+  <!-- Form Name -->
+  <legend>Registration</legend>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="textinput">Email</label>
+    <div class="col-md-4">
+    <input id="textinput" name="email" type="email" placeholder="Email Address" class="form-control input-md">
+
+    </div>
+  </div>
+
+  <!-- Password input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="passwordinput">Password</label>
+    <div class="col-md-4">
+      <input id="passwordinput" name="pass" type="password" placeholder="Password" class="form-control input-md">
+
+    </div>
+  </div>
+
+  <!-- Button -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="singlebutton"></label>
+    <div class="col-md-4">
+      <button id="singlebutton" name="singlebutton" class="btn btn-success">Submit</button>
+    </div>
+  </div>
+
+  </fieldset>
+  </form>
+</div>
   </body>
 </html>
