@@ -23,13 +23,17 @@ const users = {};
 
 //Redirect to homepage "/urls"
 app.get("/", (req, res) => {
-  res.redirect("/urls");
+  if (req.session.user_id) {
+    return res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //Registration page GET
 app.get("/register", (req, res) => {
   if (req.session.user_id) {
-    res.redirect("/urls")
+    return res.redirect("/urls")
   } else {
     let templateVariables = { userlist: users, user_Id: req.session.user_id };
     res.render("registration", templateVariables);
@@ -38,8 +42,11 @@ app.get("/register", (req, res) => {
 
 //Registration form POST
 app.post("/register", (req, res) => {
+  if (req.body.email === "" || req.body.pass === "") {
+    return res.status(400).send('Email or Password fields can not be left empty.</br><a href="/register">Go Back</a>');
+  }
   if (inUsers(users, 'email', req.body.email)) {
-    res.status(400).send('email in use</br><a href="/register">Go Back</a>');
+    return res.status(400).send('email in use</br><a href="/register">Go Back</a>');
   } else {
     let newId = generateRandomString();
     users[newId] = {
@@ -69,7 +76,7 @@ app.post("/login", (req,res) => {
     return res.send(`User not found </br><a href="/login">Go Back</a>`)
   } else if (bcrypt.compareSync(req.body.pass, users[tempID].password)) {
       req.session.user_id = tempID;
-      res.redirect("/urls");
+      return res.redirect("/urls");
   } else {
     return res.send(`Password incorrect.</br><a href="/login">Go Back</a>`)
   }
@@ -90,7 +97,7 @@ app.get("/urls", (req, res) => {
 //Create a new TinyApp URL page GET
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
-    res.redirect("/urls");
+    return res.redirect("/login");
   } else {
     let templateVariables = { userlist: users, user_Id: req.session.user_id };
     res.render("urls_new", templateVariables);
@@ -99,12 +106,16 @@ app.get("/urls/new", (req, res) => {
 
 //Create new TinyApp URL POST
 app.post("/urls", (req, res) => {
-  let shortenedURL = generateRandomString()
-  urlDatabase[shortenedURL] = {
-    longURL: addhttp(req.body.longURL),
-    userID: req.session.user_id};
-  let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL, userlist: users, user_Id: req.session.user_id };
-  res.redirect("/urls");
+  if (!req.session.user_id) {
+    return res.redirect("/urls");
+  } else {
+    let shortenedURL = generateRandomString()
+    urlDatabase[shortenedURL] = {
+      longURL: addhttp(req.body.longURL),
+      userID: req.session.user_id};
+    let templateVars = { shortURL: shortenedURL, longURL: req.body.longURL, userlist: users, user_Id: req.session.user_id };
+    res.redirect(`/urls/${shortenedURL}`);
+  }
 });
 
 //Delete a TinyApp URL POST
@@ -119,6 +130,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //Page to edit TinyApp URL GET
 app.get("/urls/:shortURL", (req, res) => {
   if (req.session.user_id !== urlDatabase[req.params.shortURL].userID) {
+    if (req.session.user_id) {
+      return res.status(400).send(`You don't own this TinyUrl..</br><a href="/urls">Go Back</a>`);
+    }
     return res.redirect("/urls");
   }
   let templateVars = { shortURL: req.params.shortURL, fullURL: urlDatabase[req.params.shortURL].longURL, userlist: users, user_Id: req.session.user_id };
@@ -127,9 +141,9 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //Edit TinyApp URL POST
 app.post("/urls/:shortURL", (req, res) => {
-  if (shortURLExists(req.params.shortURL)) {
+  if (shortURLExists(req.params.shortURL) && (req.session.user_id === urlDatabase[req.params.shortURL].userID)) {
     urlDatabase[req.params.shortURL].longURL = addhttp(req.body.newURL);
-    res.redirect("/urls");
+    return res.redirect("/urls");
   } else {
     res.redirect("/urls");
   };
